@@ -10,9 +10,9 @@ from .relationship import ActedInRel, ReviewedRel
 
 class Movie(AsyncStructuredNode):
     # Field of the node
-    released = IntegerProperty()
+    released = IntegerProperty(required=True)
     tagline = StringProperty(max_lenght=1024)
-    title = StringProperty(max_lenght=128)
+    title = StringProperty(max_lenght=128, required=True)
 
     # Relationship of the node
     actors = AsyncRelationshipFrom(".person.Person", "ACTED_IN", model=ActedInRel)

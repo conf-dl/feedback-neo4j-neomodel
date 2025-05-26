@@ -11,7 +11,7 @@ from .relationship import ActedInRel, ReviewedRel
 class Person(AsyncStructuredNode):
     # Field of the node
     born = IntegerProperty()
-    name = StringProperty()
+    name = StringProperty(required=True)
 
     # Relationship of the node
     acted_in = AsyncRelationshipTo(".movie.Movie", "ACTED_IN", model=ActedInRel)
