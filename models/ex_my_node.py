@@ -14,8 +14,10 @@ load_dotenv()
 
 
 class MyNode(AsyncStructuredNode):
+    # Name of your node
     __label__ = getenv("GITHUB_USER")
 
+    # Field of the node
     fullname = StringProperty(required=True)
     adult = BooleanProperty(default=False)
     height = IntegerProperty()
