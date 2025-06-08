@@ -5,7 +5,7 @@ from neomodel import (
     StringProperty,
 )
 
-from .relationship import ActedInRel, ReviewedRel
+from .relationship import ActedInRel
 
 
 class Person(AsyncStructuredNode):
@@ -18,5 +18,3 @@ class Person(AsyncStructuredNode):
     wrote = AsyncRelationshipTo(".movie.Movie", "WROTE")
     directed = AsyncRelationshipTo(".movie.Movie", "DIRECTED")
     produced = AsyncRelationshipTo(".movie.Movie", "PRODUCED")
-    reviewed = AsyncRelationshipTo(".movie.Movie", "REVIEWED", model=ReviewedRel)
-    follows = AsyncRelationshipTo("Person", "FOLLOWS")
