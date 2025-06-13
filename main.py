@@ -2,8 +2,10 @@ from asyncio import run
 from os import getenv
 
 from dotenv import load_dotenv
+from neo4j.time import DateTime
 from neomodel import config
 
+from models.ex_my_node import MyNode
 from models.movie import Movie
 from models.person import Person
 
@@ -25,12 +27,6 @@ async def get_all_movies_of_actor(actor_name: str) -> list[Movie]:
         return await all_movies_acted_in.acted_in.all()
     else:
         raise ValueError("Please enter a valid actor name")
-
-
-# Your tests
-async def get_my_node():
-    my_name = getenv("USER")
-    pass
 
 
 async def main():
@@ -66,9 +62,43 @@ async def main():
             print("\n /!\\ Invalid actor name /!\\")
 
         # Your tests
-        print("\n\nMy node:\n")
+        my_name = getenv("NAME")
+        print(f"\n\nMy node: {my_name}\n")
 
-        my_node = await get_my_node()
+        adult = True
+        height = 170
+        hobbies = ["Python", "Neo4j"]
+        birthdate = DateTime(year=1970, month=1, day=1)
+
+        if (my_node := await MyNode.nodes.get_or_none(name=my_name)) is None:
+            my_node = await MyNode(
+                name=my_name,
+                adult=adult,
+                height=height,
+                hobbies=hobbies,
+                birthdate=birthdate,
+            ).save()
+
+        # my_node = await MyNode.nodes.filter(name=my_name).first()
+        birth = birthdate.year_month_day
+        print(
+            f"My name: {my_node.name}, height: {my_node.height}, hobbies: {', '.join(my_node.hobbies)}, birthdate: {birth[2]}/{birth[1]}/{birth[0]}"
+        )
+
+        neighbor_name = input("\n\nEnter neighbor name: ")
+        if (neighbor := await MyNode.nodes.get_or_none(name=neighbor_name)) is None:
+            neighbor = await MyNode(
+                name=neighbor_name,
+                adult=True,
+                height=180,
+                hobbies=[
+                    "Python",
+                    "Movie",
+                ],
+                birthdate=DateTime(year=1970, month=1, day=2),
+            ).save()
+
+        await my_node.neighbors_node.connect(neighbor)
 
     except Exception as e:
         print(f"Error during Neo4j operations: {e}")
